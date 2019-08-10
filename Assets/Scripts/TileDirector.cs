@@ -30,8 +30,7 @@ public class TileDirector : MonoBehaviour
         float centerX = (sizeX - 1) * 0.75f / 2;
         float centerY = (((sizeY - 1) * kok3 / 2) + kok3 / 4) / 2;
         float cx = (x * 0.75f) - centerX;
-        float cy = (y * (kok3 / 2)) - centerY;
-        if (x % 2 != 0) cy += (kok3 / 4);
+        float cy = (y * (kok3 / 2)) - centerY + ((x % 2) * (kok3 / 4));
         return new Vector2(cx, cy);
     }
 
