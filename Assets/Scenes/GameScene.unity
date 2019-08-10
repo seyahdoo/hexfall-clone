@@ -159,7 +159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42326b97854587e458e0d1c8f792f9e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameSettingsData: {fileID: 11400000, guid: ed88c94448438014e919f1be7f17634f, type: 2}
+  gameSettingsData: {fileID: 11400000, guid: ed88c94448438014e919f1be7f17634f, type: 2}
+  cam: {fileID: 519420031}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -261,10 +262,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameSettingsData: {fileID: 11400000, guid: ed88c94448438014e919f1be7f17634f, type: 2}
+  tileDirector: {fileID: 1796564113}
+  gameState: 0
+  selectionExists: 0
   selectedTrioX: 0
   selectedTrioY: 0
-  selectionExists: 0
-  tileDirector: {fileID: 1796564113}
 --- !u!1 &1011888563
 GameObject:
   m_ObjectHideFlags: 0

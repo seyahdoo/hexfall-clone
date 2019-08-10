@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using seyahdoo.pooling.v3;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,14 +14,16 @@ public class TileDirector : MonoBehaviour
 
     public void SetupTiles(int sizeX, int sizeY)
     {
+        Pool.CreatePool<Tile>(null, sizeX * sizeY, sizeX * sizeY);
+        
         for (int x = 0; x < sizeX; x++)
         {
             for (int y = 0; y < sizeY; y++)
             {
-                GameObject go = Instantiate(tilePrefab);
-                go.transform.position = CalculateTilePosition(sizeX, sizeY, x, y);
-                go.GetComponent<SpriteRenderer>().color = Random.ColorHSV(0, 1, 1, 1, 1, 1);
-                go.transform.SetParent(this.transform);
+                Tile tile = Pool.Get<Tile>();
+                tile.transform.position = CalculateTilePosition(sizeX, sizeY, x, y);
+                tile.spriteRenderer.color = Random.ColorHSV(0, 1, 1, 1, 1, 1);
+                tile.transform.SetParent(this.transform);
             }
         }
     }

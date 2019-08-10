@@ -5,13 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraBoundry : MonoBehaviour
 {
-    public GameSettingsData GameSettingsData;
+    public GameSettingsData gameSettingsData;
+    public Camera cam;
 
     private void Awake()
     {
-        //h = calculate for height
-        //w = calculate for width
-        //set size for max(h,w)
+        float w = ((gameSettingsData.gridXSize - 1) * 0.75f) + 1;
+        float orthographicSize = w * Screen.height / Screen.width * 0.5f;
 
+        cam.orthographicSize = orthographicSize;
     }
 }
