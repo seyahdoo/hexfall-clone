@@ -9,6 +9,8 @@ public class GameDirector : MonoBehaviour
 
     public TileDirector tileDirector;
 
+    public Camera cam;
+
     public enum GameState
     {
         Loading,
@@ -33,6 +35,8 @@ public class GameDirector : MonoBehaviour
 
     }
 
+    public Vector2 lastKnownMousePosition;
+    public float clickPositionDelta = 20f;
 
     private void Update()
     {
@@ -48,8 +52,7 @@ public class GameDirector : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 //Record mouse position
-
-                
+                lastKnownMousePosition = Input.mousePosition;
             }
 
             if (Input.GetMouseButton(0))
@@ -61,12 +64,19 @@ public class GameDirector : MonoBehaviour
             if (Input.GetMouseButtonUp(0))
             {
                 //if clicked recently, (position not changed much)
-                //->Select Tiles, if there is previous tiles selected, return them to original state first
+                if(Vector2.Distance(Input.mousePosition, lastKnownMousePosition) < clickPositionDelta)
+                {
+                    //->Select Tiles, if there is previous tiles selected, return them to original state first
+                    tileDirector.SelectTiles(cam.ScreenToWorldPoint(Input.mousePosition));
+                }
+                else
+                {
+                    //->Try Exploding
+                    //->if explosion fails 
+                    //->->->Return original state.
+                }
 
-                //else
-                //->Try Exploding
-                //->if explosion fails 
-                //->->->Return original state.
+
 
             }
 

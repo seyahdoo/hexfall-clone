@@ -9,6 +9,8 @@ public class TileDirector : MonoBehaviour
     public GameObject tilePrefab;
     public List<Tile> tiles = new List<Tile>();
 
+    public bool TileSelectDebugMode = false;
+    public GameObject debugCube;
 
     private readonly float kok3 = 1.7320508075688772f;
 
@@ -43,20 +45,49 @@ public class TileDirector : MonoBehaviour
     /// Select 3 tiles with giving a center point
     /// </summary>
     /// <param name="centerPosition"></param>
-    public void SelectTiles(Vector2 centerPosition)
+    /// <returns></returns>
+    public Tile[] SelectTiles(Vector2 centerPosition)
     {
         Tile[] selectedTiles = new Tile[3] { null, null, null };
-        float[] distances = new float[3] { 100f, 100f, 100f };
+        float[] distances = new float[3] { 1000f, 1000f, 1000f };
 
         foreach (Tile tile in tiles)
         {
             float distance = Vector2.Distance(tile.transform.position, centerPosition);
 
-            //todo find most closest 3 tile
+            //find most distant selected tile
+            int max = 0;
+            for (int i = 1; i < 3; i++)
+            {
+                if (distances[max] < distances[i])
+                {
+                    max = i;
+                }
+            }
 
+            //if distance < most distant selected tile, swap with most distant selected tile
+            if (distance < distances[max])
+            {
+                selectedTiles[max] = tile;
+                distances[max] = distance;
+            }
 
         }
 
+        if (TileSelectDebugMode)
+        {
+            debugCube.transform.position = centerPosition;
+
+            Color c = Random.ColorHSV(0, 1, 1, 1, 1, 1);
+
+            for (int i = 0; i < 3; i++)
+            {
+                selectedTiles[i].spriteRenderer.color = c;
+            }
+
+        }
+
+        return selectedTiles;
 
     }
 
