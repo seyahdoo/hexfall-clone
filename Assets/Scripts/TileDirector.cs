@@ -147,13 +147,24 @@ public class TileDirector : MonoBehaviour
 
     }
 
+    private float lastRotationValue = 0f;
+
     /// <summary>
     /// Rotate selected tiles
     /// </summary>
     /// <param name="degrees"></param>
     public void Rotate(float degrees)
     {
+        lastRotationValue = degrees;
         rotatorPivot.transform.localEulerAngles = Vector3.forward * degrees;
+    }
+
+    public float FindSnapRotationValue(float degrees)
+    {
+
+        int optimizedX = ((int)(((degrees % 360) + 60) / 120)) % 2;
+        return optimizedX * 120f;
+
     }
 
 
