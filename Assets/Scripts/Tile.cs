@@ -5,5 +5,6 @@ using UnityEngine;
 public class Tile : MonoBehaviour {
 
     public SpriteRenderer spriteRenderer;
+    public TileSlot tileSlot;
 
 }

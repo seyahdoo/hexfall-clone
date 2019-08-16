@@ -31,11 +31,10 @@ public class GameDirector : MonoBehaviour
     {
         tileDirector.SetupTiles(gameSettingsData.gridXSize, gameSettingsData.gridYSize);
 
-
-
     }
 
     public Vector2 lastKnownMousePosition;
+    public Vector2 lastKnownCenterPosition;
     public float clickPositionDelta = 20f;
 
     private void Update()
@@ -59,6 +58,16 @@ public class GameDirector : MonoBehaviour
             {
                 //Rotate
                 //While rotating, seperate the tiles just a little bit, responsively
+                Vector2 delta = lastKnownMousePosition - (Vector2)Input.mousePosition;
+                Vector3 cross = Vector3.Cross(lastKnownMousePosition - lastKnownCenterPosition, Vector3.forward);
+
+                Vector2 distance = (Vector2)cross - delta;
+
+                float rotation = distance.x + distance.y;
+                
+                //TODO really do this
+                tileDirector.Rotate(rotation);
+
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -68,6 +77,7 @@ public class GameDirector : MonoBehaviour
                 {
                     //->Select Tiles, if there is previous tiles selected, return them to original state first
                     tileDirector.SelectTiles(cam.ScreenToWorldPoint(Input.mousePosition));
+                    lastKnownCenterPosition = Input.mousePosition;
                 }
                 else
                 {

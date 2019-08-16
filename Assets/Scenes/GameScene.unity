@@ -269,6 +269,7 @@ MonoBehaviour:
   selectedTrioX: 0
   selectedTrioY: 0
   lastKnownMousePosition: {x: 0, y: 0}
+  lastKnownCenterPosition: {x: 0, y: 0}
   clickPositionDelta: 20
 --- !u!1 &1011888563
 GameObject:
@@ -437,8 +438,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f74c42d16254d874e93448b1e6ed567f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilePrefab: {fileID: 3497687808421953327, guid: 2d15f4bb9cd693c468235d0250da393a,
-    type: 3}
+  gameSettingsData: {fileID: 11400000, guid: ed88c94448438014e919f1be7f17634f, type: 2}
   tiles: []
-  TileSelectDebugMode: 0
+  selectedTiles: []
+  rotatorPivot: {fileID: 0}
+  TileSelectDebugMode: 1
   debugCube: {fileID: 1157276782}

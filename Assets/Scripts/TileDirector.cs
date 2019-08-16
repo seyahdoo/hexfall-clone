@@ -6,13 +6,37 @@ using UnityEngine;
 public class TileDirector : MonoBehaviour
 {
 
-    public GameObject tilePrefab;
+    public GameSettingsData gameSettingsData;
+
+    public TileSlot[,] tileSlots;
     public List<Tile> tiles = new List<Tile>();
+
+    public Tile[] selectedTiles = null;
+    public GameObject rotatorPivot = null;
 
     public bool TileSelectDebugMode = false;
     public GameObject debugCube;
 
     private readonly float kok3 = 1.7320508075688772f;
+
+    private void Awake()
+    {
+        tileSlots = new TileSlot[gameSettingsData.gridXSize, gameSettingsData.gridYSize];
+        for (int x = 0; x < gameSettingsData.gridXSize; x++)
+        {
+            for (int y = 0; y < gameSettingsData.gridYSize; y++)
+            {
+                GameObject go = new GameObject("TileSlot");
+                go.transform.SetParent(this.transform);
+                TileSlot ts = go.AddComponent<TileSlot>();
+                tileSlots[x, y] = ts;
+            }
+        }
+
+        rotatorPivot = new GameObject("RotatorPivot");
+        rotatorPivot.transform.SetParent(this.transform);
+        
+    }
 
     public void SetupTiles(int sizeX, int sizeY)
     {
@@ -23,10 +47,13 @@ public class TileDirector : MonoBehaviour
             for (int y = 0; y < sizeY; y++)
             {
                 Tile tile = Pool.Get<Tile>();
-                tile.transform.position = CalculateTilePosition(sizeX, sizeY, x, y);
+                tileSlots[x, y].transform.position = CalculateTilePosition(sizeX, sizeY, x, y);
                 tile.spriteRenderer.color = Random.ColorHSV(0, 1, 1, 1, 1, 1);
                 tile.transform.SetParent(this.transform);
                 tiles.Add(tile);
+                tileSlots[x, y].tile = tile;
+                tile.tileSlot = tileSlots[x, y];
+
             }
         }
     }
@@ -74,6 +101,35 @@ public class TileDirector : MonoBehaviour
 
         }
 
+
+        if(this.selectedTiles.Length > 0)
+        {
+            foreach (Tile tile in this.selectedTiles)
+            {
+                tile.tileSlot.following = true;
+            }
+            Rotate(0);
+            for (int i = 0; i < 3; i++)
+            {
+                this.selectedTiles[i].transform.SetParent(this.transform);
+            }
+        }
+
+        rotatorPivot.transform.position = 
+            (selectedTiles[0].transform.position + 
+            selectedTiles[1].transform.position + 
+            selectedTiles[2].transform.position) 
+            / 3;
+
+        for (int i = 0; i < 3; i++)
+        {
+            selectedTiles[i].transform.SetParent(rotatorPivot.transform);
+        }
+
+        this.selectedTiles = selectedTiles;
+
+
+
         if (TileSelectDebugMode)
         {
             debugCube.transform.position = centerPosition;
@@ -97,12 +153,7 @@ public class TileDirector : MonoBehaviour
     /// <param name="degrees"></param>
     public void Rotate(float degrees)
     {
-
-    }
-
-    public void ResetRotation()
-    {
-
+        rotatorPivot.transform.localEulerAngles = Vector3.forward * degrees;
     }
 
 
@@ -116,7 +167,23 @@ public class TileDirector : MonoBehaviour
 
     }
 
+    private void LateUpdate()
+    {
 
+        for (int x = 0; x < gameSettingsData.gridXSize; x++)
+        {
+            for (int y = 0; y < gameSettingsData.gridYSize; y++)
+            {
+                if(tileSlots[x, y].following && tileSlots[x, y].tile != null)
+                {
+                    tileSlots[x, y].tile.transform.position = Vector3.Lerp(tileSlots[x, y].tile.transform.position, tileSlots[x, y].transform.position, Time.deltaTime * 4);
+                    tileSlots[x, y].tile.transform.rotation = Quaternion.Lerp(tileSlots[x, y].tile.transform.rotation, tileSlots[x, y].transform.rotation, Time.deltaTime * 4);
+                }
+
+            }
+        }
+
+    }
 
 
 
