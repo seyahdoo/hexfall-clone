@@ -159,13 +159,17 @@ public class TileDirector : MonoBehaviour
     /// <param name="degrees"></param>
     public void Rotate(float degrees)
     {
+        //print(degrees);
         lastRotationValue = degrees;
         rotatorPivot.transform.localEulerAngles = Vector3.forward * degrees;
     }
 
     public int FindSnapRotationCount(float degrees)
     {
-        return ((int)(((degrees % 360) + 60) / 120)) % 3;
+        degrees = degrees * (-1);
+        while (degrees < 0){ degrees = degrees + 360; }
+        int rot = ((int)(((degrees % 360) + 60) / 120)) % 3;
+        return rot;
     }
 
 
