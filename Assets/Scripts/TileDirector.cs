@@ -111,7 +111,7 @@ public class TileDirector : MonoBehaviour
             {
                 tile.tileSlot.following = true;
             }
-            Rotate(0);
+            //Rotate(0);
             for (int i = 0; i < 3; i++)
             {
                 this.selectedTiles[i].transform.SetParent(this.transform);
@@ -159,7 +159,6 @@ public class TileDirector : MonoBehaviour
     /// <param name="degrees"></param>
     public void Rotate(float degrees)
     {
-        //print(degrees);
         lastRotationValue = degrees;
         rotatorPivot.transform.localEulerAngles = Vector3.forward * degrees;
     }
@@ -178,18 +177,35 @@ public class TileDirector : MonoBehaviour
         Debug.Log("Trying to explode");
 
         //Snap Rotation
-        int rotationCount = FindSnapRotationCount(lastRotationValue);
-        for (int i = 0; i < rotationCount; i++)
+        //Select most near tile slot for every tile
+        
+
+
+        //int rotationCount = FindSnapRotationCount(lastRotationValue);
+        //print(rotationCount);
+        for (int i = 0; i < 3; i++)
         {
-            for (int j = 0; j < 3; j++)
+            Vector3 pos = selectedTiles[i].transform.position;
+            float minDistance = Vector3.Distance(selectedTileSlots[0].transform.position, pos);
+            int selected = 0;
+            for (int j = 1; j < 3; j++)
             {
-                selectedTileSlots[j].tile = selectedTiles[(j - 1) % 3];
-                selectedTiles[j].tileSlot = selectedTileSlots[(j + 1) % 3];
+                float cachedistance = Vector3.Distance(selectedTileSlots[j].transform.position, pos);
+                if (minDistance > cachedistance)
+                {
+                    selected = j;
+                    minDistance = cachedistance;
+                }
             }
+
+            selectedTileSlots[selected].tile = selectedTiles[i];
+            selectedTiles[i].tileSlot = selectedTileSlots[selected];
         }
+
 
         for (int i = 0; i < 3; i++)
         {
+            selectedTiles[i].transform.SetParent(this.transform);
             selectedTileSlots[i].following = true;
         }
 
