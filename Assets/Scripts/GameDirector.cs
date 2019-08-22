@@ -58,16 +58,16 @@ public class GameDirector : MonoBehaviour
             {
                 //Rotate
                 //While rotating, seperate the tiles just a little bit, responsively
-                Vector2 delta = lastKnownMousePosition - (Vector2)Input.mousePosition;
-                Vector3 cross = Vector3.Cross(lastKnownMousePosition - lastKnownCenterPosition, Vector3.forward);
+                //Vector2 v1 = lastKnownCenterPosition - lastKnownMousePosition;
+                //Vector2 v2 = lastKnownCenterPosition - (Vector2)Input.mousePosition;
+                //float c = Mathf.Atan(v1.x / v1.y) + Mathf.Atan(v2.x / v2.y);
+                //float r = (Mathf.PI - c) * Mathf.Rad2Deg;
 
-                Vector2 distance = (Vector2)cross - delta;
+                Vector2 v = -lastKnownMousePosition + (Vector2)Input.mousePosition;
+                float r = (v.x/Screen.width + v.y/Screen.height) * 360f;
 
-                float rotation = distance.x + distance.y;
-                
                 //TODO really do this
-                tileDirector.Rotate(rotation);
-
+                tileDirector.Rotate(r);
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -81,6 +81,7 @@ public class GameDirector : MonoBehaviour
                 }
                 else
                 {
+                    tileDirector.TryExplode();
                     //->Try Exploding
                     //->if explosion fails 
                     //->->->Return original state.

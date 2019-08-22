@@ -441,6 +441,7 @@ MonoBehaviour:
   gameSettingsData: {fileID: 11400000, guid: ed88c94448438014e919f1be7f17634f, type: 2}
   tiles: []
   selectedTiles: []
+  selectedTileSlots: []
   rotatorPivot: {fileID: 0}
-  TileSelectDebugMode: 1
+  TileSelectDebugMode: 0
   debugCube: {fileID: 1157276782}

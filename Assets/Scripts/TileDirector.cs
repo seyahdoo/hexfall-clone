@@ -12,6 +12,7 @@ public class TileDirector : MonoBehaviour
     public List<Tile> tiles = new List<Tile>();
 
     public Tile[] selectedTiles = null;
+    public TileSlot[] selectedTileSlots = null;
     public GameObject rotatorPivot = null;
 
     public bool TileSelectDebugMode = false;
@@ -78,6 +79,8 @@ public class TileDirector : MonoBehaviour
         Tile[] selectedTiles = new Tile[3] { null, null, null };
         float[] distances = new float[3] { 1000f, 1000f, 1000f };
 
+        //This functions could have been O(1) :\
+
         foreach (Tile tile in tiles)
         {
             float distance = Vector2.Distance(tile.transform.position, centerPosition);
@@ -124,10 +127,11 @@ public class TileDirector : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             selectedTiles[i].transform.SetParent(rotatorPivot.transform);
+            selectedTiles[i].tileSlot.following = false;
         }
 
         this.selectedTiles = selectedTiles;
-
+        this.selectedTileSlots = new TileSlot[3] { selectedTiles[0].tileSlot, selectedTiles[1].tileSlot, selectedTiles[2].tileSlot };
 
 
         if (TileSelectDebugMode)
@@ -159,14 +163,37 @@ public class TileDirector : MonoBehaviour
         rotatorPivot.transform.localEulerAngles = Vector3.forward * degrees;
     }
 
-    public float FindSnapRotationValue(float degrees)
+    public int FindSnapRotationCount(float degrees)
     {
-
-        int optimizedX = ((int)(((degrees % 360) + 60) / 120)) % 2;
-        return optimizedX * 120f;
-
+        return ((int)(((degrees % 360) + 60) / 120)) % 3;
     }
 
+
+    public void TryExplode()
+    {
+        Debug.Log("Trying to explode");
+
+        //Snap Rotation
+        int rotationCount = FindSnapRotationCount(lastRotationValue);
+        for (int i = 0; i < rotationCount; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                selectedTileSlots[j].tile = selectedTiles[(j - 1) % 3];
+                selectedTiles[j].tileSlot = selectedTileSlots[(j + 1) % 3];
+            }
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            selectedTileSlots[i].following = true;
+        }
+
+        //try to find explodable Tiles
+        //if there is one Explode
+        //else Play Explosion Fail animation
+
+    }
 
     /// <summary>
     /// Seperate the tiles around one point for a little bit

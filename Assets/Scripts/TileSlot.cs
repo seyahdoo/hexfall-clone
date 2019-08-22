@@ -5,5 +5,5 @@ using UnityEngine;
 public class TileSlot : MonoBehaviour
 {
     public Tile tile;
-    public bool following;
+    public bool following = true;
 }
